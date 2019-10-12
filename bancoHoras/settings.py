@@ -121,3 +121,20 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/2.2/howto/static-files/
 
 STATIC_URL = '/static/'
+
+VALI_CONFIG = {
+    # the vali-admin themes  default, blue, purple, green,brown
+    'theme': 'default',
+    'dashboard': {'name': 'Dashboard', 'url': '/dashboard/'},
+    # the order for applist  default, registry
+    # display applist by group: True
+    #  e.g. {group: True}
+    # default check decorators  vali.decorator.vali_models_group on ModelAdmin
+    #  * otherwize use group_marker in verbose_name_plural, (will be deprecated in future version 0.2.0)*
+    #  * e.g.  {group: True, group_marker : '-'}
+    #    verbose_name_plural = system-user
+    #  * display the model "user" in group "system"
+    'applist': {"order": "registry", "group": True},
+    # default: //maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css
+    # 'font_awesome_url': '/local/path/to/font-awesome-4.7.0/css/font-awesome.min.css',
+}
