@@ -1,0 +1,19 @@
+{% extends "admin/base.html" %}
+
+{% block title %}
+    {% if title %}
+        {{ title }}
+    {% else %}
+        {{ VALI_CONFIG.dashboard.site_name|default:'Site dashboard' }}
+    {% endif %} | {{ site_title|default:_('Django admin') }}
+{% endblock %}
+
+{% block branding %}
+    {% if VALI_CONFIG.dashboard %}
+        {% url 'admin:index' as adminurl %}
+        <a class="app-header__logo" href="{{ VALI_CONFIG.dashboard.url|default:adminurl }}"
+           style="white-space:pre">{{ VALI_CONFIG.dashboard.site_name|default:'Abelsantana' }}</a>
+    {% endif %}
+{% endblock %}
+
+{% block nav-global %}{% endblock %}

@@ -1,0 +1,12 @@
+{% extends "admin/change_form.html" %}
+{% load i18n %}
+
+{% block form_top %}
+    <div class="col">
+        {% if not is_popup %}
+            <p class="alert alert-info col">{% trans "First, enter a username and password. Then, you'll be able to edit more user options." %}</p>
+        {% else %}
+            <p class="alert alert-info">{% trans "Enter a username and password." %}</p>
+        {% endif %}
+    </div>
+{% endblock %}

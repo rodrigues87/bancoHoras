@@ -1,0 +1,24 @@
+{% extends "admin/base_site.html" %}
+{% load i18n %}
+
+{% block breadcrumbs %}
+    <style>
+        .app-content {
+            margin-left: 0px !important;
+        }
+
+        .app-sidebar__toggle:before {
+            content: "\f08b";
+            font-size: 21px;
+        }
+    </style>
+    <div class="breadcrumbs"><a href="{% url 'admin:index' %}">{% trans 'Home' %}</a></div>
+{% endblock %}
+
+{% block content %}
+
+    <p>{% trans "Thanks for spending some quality time with the Web site today." %}</p>
+
+    <p><a href="{% url 'admin:index' %}">{% trans 'Log in again' %}</a></p>
+
+{% endblock %}

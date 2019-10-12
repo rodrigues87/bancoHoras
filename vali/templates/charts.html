@@ -1,0 +1,78 @@
+{% load i18n static %}
+
+{% if charts %}
+    {% for chart in charts %}
+        <div class="col-md-6">
+            <div class="tile">
+                <div class="tile-title-w-btn">
+                    <h3 class="tile-title">{{ chart.title }}</h3>
+                  {% comment %}
+                    <div class="btn-group">
+                        <a class="btn btn-primary" id="_{{ chart.name }}" href="#"><i class="fa fa-lg fa-eye"></i></a>
+                    </div>
+                    {% endcomment %}
+                </div>
+                <div class="embed-responsive embed-responsive-16by9">
+                    <canvas class="embed-responsive-item" id="{{ chart.name }}"></canvas>
+                </div>
+            </div>
+        </div>
+        {% block loadcharts %}
+            {% if chart %}
+                <!-- Load jquery -->
+                <script src="{% static 'vali/assets/js/jquery-3.2.1.min.js' %}"></script>
+                <!-- Load alert -->
+                <script src="{% static 'vali/assets/js/plugins/sweetalert.min.js' %}"></script>
+                <!-- Load chart -->
+                <script type="text/javascript">
+                    {% if chart.chart_type == 'Bar' or chart.chart_type == 'Line' or chart.chart_type == 'Radar' %}
+                        $(document).ready(function () {
+                            var data = {
+                                labels: {{ chart.labels|safe }},
+                                datasets: {{ chart.datasets|safe }}
+                            };
+                            var ctx{{ chart.name }} = $("#{{ chart.name }}").get(0).getContext("2d");
+                            var chart_{{ chart.name }} = new Chart(ctx{{ chart.name }}).{{ chart.chart_type }}(data);
+                        });
+                    {% elif chart.chart_type == 'PolarArea' or chart.chart_type == 'Pie' or chart.chart_type == 'Doughnut' %}
+                        $(document).ready(function () {
+                            var data = {{ chart.datasets|safe }};
+                            var ctx{{ chart.name }} = $("#{{ chart.name }}").get(0).getContext("2d");
+                            var chart_{{ chart.name }} = new Chart(ctx{{ chart.name }}).{{ chart.chart_type }}(data);
+                        });
+                    {% endif %}
+                </script>
+                <!-- View chart informations -->
+                <script type="text/javascript">
+                    $('#demoNotify').click(function () {
+                        $.notify({
+                            title: "Update Complete : ",
+                            message: "Something cool is just updated!",
+                            icon: 'fa fa-check'
+                        }, {
+                            type: "info"
+                        });
+                    });
+                    $('#_{{ chart.name }}').click(function () {
+                        swal({
+                            title: "{{ chart.title }}",
+                            text: "You will not be able to recover this imaginary file!",
+                            type: "warning",
+                            showCancelButton: true,
+                            confirmButtonText: "Yes, delete it!",
+                            cancelButtonText: "No, cancel please!",
+                            closeOnConfirm: false,
+                            closeOnCancel: false
+                        }, function (isConfirm) {
+                            if (isConfirm) {
+                                swal("Deleted!", "Your imaginary file has been deleted.", "success");
+                            } else {
+                                swal("Cancelled", "Your imaginary file is safe :)", "error");
+                            }
+                        });
+                    });
+                </script>
+            {% endif %}
+        {% endblock %}
+    {% endfor %}
+{% endif %}

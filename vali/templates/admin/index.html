@@ -1,0 +1,52 @@
+{% extends "admin/base_site.html" %}
+{% load i18n static %}
+{% load vali_tags %}
+{% block coltype %}container row{% endblock %}
+{% block breadcrumbs %}{% endblock %}
+
+
+
+{% comment %}
+
+{% block sidebar %}
+    <div class="card pull-right col-md-3 card-log-entry">
+        <div class="bs-component">
+            <div class="card">
+                <h4 class="card-header">{% trans 'Log Entry' %}</h4>
+                <div class="card-body card-body-header">
+                    <h5 class="card-title">{% trans 'Recent actions' %}</h5>
+                    <h6 class="card-subtitle text-muted">{% trans 'My actions' %}</h6>
+                </div>
+                <div class="card-body">
+                    {% load log %}
+                    {% get_admin_log 10 as admin_log for_user user %}
+                    {% if not admin_log %}
+                        <p class="card-text">{% trans 'None available' %}</p>
+                    {% else %}
+                        <ul class="list-entry-logs">
+                            {% for entry in admin_log %}
+                                <li class="list-group-item">
+                                    <i class="{% if entry.is_addition %}fa fa-plus{% endif %}{% if entry.is_change %}fa fa-pencil{% endif %}{% if entry.is_deletion %}fa fa-remove{% endif %}"></i>
+                                    {% if entry.is_deletion or not entry.get_admin_url %}
+                                        {{ entry.object_repr }}
+                                    {% else %}
+                                        <a href="{{ entry.get_admin_url }}">{{ entry.object_repr }}</a>
+                                    {% endif %}
+                                    <br/>
+                                    {% if entry.content_type %}
+                                        <em class="mini quiet text-muted">
+                                            {% filter capfirst %}{{ entry.content_type }}{% endfilter %}</em>
+                                    {% else %}
+                                        <em class="mini quiet text-muted">{% trans 'Unknown content' %}</em>
+                                    {% endif %}
+                                </li>
+                            {% endfor %}
+                        </ul>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% endcomment %}

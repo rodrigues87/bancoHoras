@@ -1,0 +1,96 @@
+{% load i18n static %}<!DOCTYPE html>
+{% load vali_tags %}
+{% vali_config as VALI_CONFIG %}
+{% get_current_language as LANGUAGE_CODE %}{% get_current_language_bidi as LANGUAGE_BIDI %}
+<html lang="{{ LANGUAGE_CODE|default:'en-us' }}" {% if LANGUAGE_BIDI %}dir="rtl"{% endif %}>
+<head>
+<title>{% block title %}{{ title }}{% endblock %}</title>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+{# <link rel="stylesheet" type="text/css" href="{% block stylesheet %}{% static 'admin/css/base.css' %}{% endblock %}" /> #}
+{% block extrastyle %}{% endblock %}
+{% if LANGUAGE_BIDI %}<link rel="stylesheet" type="text/css" href="{% block stylesheet_rtl %}{% static 'admin/css/rtl.css' %}{% endblock %}" />{% endif %}
+{% block extrahead %}{% endblock %}
+{% block responsive %}
+    <meta name="viewport" content="user-scalable=no, width=device-width, initial-scale=1.0, maximum-scale=1.0">
+    <link rel="stylesheet" type="text/css" href="{% static 'admin/css/responsive.css' %}" />
+    {% if LANGUAGE_BIDI %}<link rel="stylesheet" type="text/css" href="{% static 'admin/css/responsive_rtl.css' %}" />{% endif %}
+{% endblock %}
+    <link rel="stylesheet" type="text/css" href="{% static '' %}vali/themes/{% VALI_THEME %}/main.css" />
+    <link rel="stylesheet" type="text/css" href="{% static 'vali/assets/vali.css' %}" />
+    {% if VALI_CONFIG.font_awesome_url %}
+    <link rel="stylesheet" type="text/css" href="{% static VALI_CONFIG.font_awesome_url %}" />
+    {% else %}
+    <link rel="stylesheet" type="text/css" href="//maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+    {% endif %}
+{% block blockbots %}<meta name="robots" content="NONE,NOARCHIVE" />{% endblock %}
+</head>
+<body>
+  <section class="material-half-bg">
+      <div class="cover"></div>
+  </section>
+  <section class="login-content">
+      <div class="logo">
+        <h1>
+          {% if VALI_CONFIG.dashboard.site_name %} {{ VALI_CONFIG.dashboard.site_name }} {% endif %} {{ _('Administration') }}
+        </h1>
+      </div>
+      <div class="login-box">
+        {% if form.errors and not form.non_field_errors %}
+          <p class="text-danger small">
+          {% if form.errors.items|length == 1 %}{% trans "Please correct the error below." %}{% else %}{% trans "Please correct the errors below." %}{% endif %}
+          </p>
+          {% endif %}
+
+        {% if user.is_authenticated %}
+        <p class="text-danger small">
+        {% blocktrans trimmed %}
+            You are authenticated as {{ username }}, but are not authorized to
+            access this page. Would you like to login to a different account?
+        {% endblocktrans %}
+        </p>
+        {% endif %}
+        <form action="{{ app_path }}" class="login-form" method="post" id="login-form">
+          {% csrf_token %}
+          <h3 class="login-head"><i class="fa fa-lg fa-fw fa-user"></i>{%trans 'Login' %}</h3>
+          <div class="form-group row">
+            {{ form.username.errors }}
+            <div class="col-md-3"> {{ form.username.label_tag }}</div><div class="col">{% vali_field form.username %}</div>
+          </div>
+          <div class="form-group row">
+            {{ form.password.errors }}
+            <div class="col-md-3"> {{ form.password.label_tag }} </div><div class="col">{% vali_field form.password %}</div>
+            {% if VALI_CONFIG.dashboard.url %}
+              <input type="hidden" name="next" value="{{ VALI_CONFIG.dashboard.url }}" />
+            {% else %}
+              <input type="hidden" name="next" value="{{ next }}" />
+            {% endif %}
+          </div>
+          <div class="form-group btn-container">
+            <button type="submit" class="btn btn-primary btn-block" value="{% trans 'Log in' %}"><i class="fa fa-sign-in fa-lg fa-fw"></i>{% trans 'Log in' %}</button>
+          </div>
+          {% if form.non_field_errors %}
+            {% for error in form.non_field_errors %}
+            <p class="text-danger small">
+                {{ error }}
+            </p>
+            {% endfor %}
+          {% endif %}
+        </form>
+      </div>
+    </section>
+
+<script src="{% static 'vali/assets/js/jquery-3.2.1.min.js' %}"></script>
+<script src="{% static 'vali/assets/js/popper.min.js' %}"></script>
+<script src="{% static 'vali/assets/js/bootstrap.min.js' %}"></script>
+<script src="{% static 'vali/assets/js/main.js' %}"></script>
+<script src="{% static 'vali/assets/vali.js' %}"></script>
+<script src="{% static 'vali/assets/js/plugins/pace.min.js'%}"></script>
+<script type="text/javascript">
+  $('.login-content [data-toggle="flip"]').click(function() {
+  	$('.login-box').toggleClass('flipped');
+  	return false;
+  });
+</script>
+</body>
+</html>
