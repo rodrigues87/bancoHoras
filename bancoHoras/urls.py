@@ -23,6 +23,5 @@ from vali.views import ValiDashboardView
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('dashboard/', ValiDashboardView.as_view(), name="dashboard"),
-    url(r'', RedirectView.as_view(url='/dashboard/')),
-
+    url(r'', RedirectView.as_view(url='/admin/')),
 ]

@@ -5427,7 +5427,7 @@ input[type="button"].btn-block {
 .alert {
     position: relative;
     padding: 0.75rem 1.25rem;
-    margin-bottom: 1rem;
+    /*margin-bottom: 1rem;*/
     border: 1px solid transparent;
     border-radius: 0.25rem;
 }
@@ -14827,7 +14827,7 @@ be a descendant of the grid when it is being dragged.
 .btn .icon,
 .btn .fa {
     font-size: 14px;
-    margin-right: 5px;
+    /*margin-right: 5px;*/
     vertical-align: middle;
 }
 

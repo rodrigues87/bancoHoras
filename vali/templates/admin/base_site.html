@@ -12,7 +12,7 @@
     {% if VALI_CONFIG.dashboard %}
         {% url 'admin:index' as adminurl %}
         <a class="app-header__logo" href="{{ VALI_CONFIG.dashboard.url|default:adminurl }}"
-           style="white-space:pre">{{ VALI_CONFIG.dashboard.site_name|default:'Abelsantana' }}</a>
+           style="white-space:pre">{{ VALI_CONFIG.dashboard.site_name|default:'Banco de Horas' }}</a>
     {% endif %}
 {% endblock %}
 

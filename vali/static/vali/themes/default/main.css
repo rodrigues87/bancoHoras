@@ -5448,7 +5448,7 @@ input[type="button"].btn-block {
 .alert {
     position: relative;
     padding: 0.75rem 1.25rem;
-    margin-bottom: 1rem;
+    /*margin-bottom: 1rem;*/
     border: 1px solid transparent;
     border-radius: 0.25rem;
 }
@@ -14848,7 +14848,7 @@ be a descendant of the grid when it is being dragged.
 .btn .icon,
 .btn .fa {
     font-size: 14px;
-    margin-right: 5px;
+    /*margin-right: 5px;*/
     vertical-align: middle;
 }
 
@@ -16040,11 +16040,35 @@ form .wide .field-password1 ul li {
 .change-list .filtered {
     min-height: 100% !important;
 }
+.fab {
+
+   width: 60px;
+   height: 60px;
+   border-radius: 50%;
+   box-shadow: 0 6px 10px 0 #666;
+
+   font-size: 25px;
+   line-height: 60px;
+   color: white;
+   text-align: center;
+    z-index: :3;
+
+   position: fixed;
+   right: 5%;
+   bottom: 5%;
+
+  transition: all 0.1s ease-in-out;
+}
+
+.fab:hover {
+   box-shadow: 0 6px 14px 0 #666;
+   transform: scale(1.05);
+}
 
 @media (max-width: 767px) {
     #content {
         padding: 15px !important;
-        margin-top: 20px;
+        /*margin-top: 20px;*/
         margin-left: 0;
     }
 
@@ -16062,6 +16086,8 @@ form .wide .field-password1 ul li {
         right: 5%;
         top: 5%;
     }
+
+
 
     .text-info {
         display: none;

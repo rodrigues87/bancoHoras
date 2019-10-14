@@ -1,6 +1,7 @@
 import random
 
 from django.contrib.auth.models import Group, User
+from django.db.models import Q
 from django.shortcuts import render
 from django.utils.decorators import method_decorator
 from django.views.generic import TemplateView
@@ -67,95 +68,67 @@ class ValiDashboardBase(TemplateView):
     def dispatch(self, request, *args, **kwargs):
         return super(ValiDashboardBase, self).dispatch(request, *args, **kwargs)
 
-def usuariosAtivos():
-  cadastros = User.objects.count()
 
-  return cadastros
-
-
-def minhasHoras():
-  soma = 0;
-
-  registros = BancoHoras.objects.filter(militar=1)
-  for registro in registros:
-    soma = soma + registro.horas_adicionadas - registro.horas_usadas
-
-  return soma
-
-
+def verificarHoras(user):
+    somaHorasUsuario = 0
+    registros = BancoHoras.objects.filter(militar=user)
+    for registro in registros:
+        somaHorasUsuario = somaHorasUsuario + registro.horas_adicionadas - registro.horas_usadas
+    return somaHorasUsuario
 
 
 class ValiDashboardView(ValiDashboardBase):
     r = lambda: random.randint(0, 100)
 
     template_name = 'dashboard.html'
+
     # default count users data
-    users = User.objects.count()
 
-    soma = minhasHoras
-    """
-    # default charts data
-    list_charts = [
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        list_horasUsuario = []
+        usuarios = []
 
-        {
-            # Support Chart types: PolarArea, Pie, Doughnut
-            "name": "piechart1",
-            "title": "Faltas",
-            "chart_type": "Pie",
-            "datasets": [
+        users = User.objects.all()
 
-                {
-                    "value": 300,
-                    "color": '#%02X%02X%02X' % (r(), r(), r()),
-                    "label": "Red"
-                },
-                {
-                    "value": 50,
-                    "color": '#%02X%02X%02X' % (r(), r(), r()),
-                    "label": "Green"
-                },
-                {
-                    "value": 100,
-                    "color": '#%02X%02X%02X' % (r(), r(), r()),
-                    "label": "Yellow"
-                },
-            ]
-        },
-        {
-            # Support Chart types: Bar, Line, Radar
-            "name": "vendas",
-            "title": "Vendas Mensais",
-            "chart_type": "Bar",
-            "labels": ["2018-03-01", "2018-03-02", "2018-03-03", "2018-03-04", "2018-03-05"],
-            "datasets": [
-                {
-                    "label": "dataset 1",
-                    "fillColor": "rgba(220,220,220,0.2)",
-                    "strokeColor": "rgba(220,220,220,1)",
-                    "pointColor": "rgba(220,220,220,1)",
-                    "pointStrokeColor": "#fff",
-                    "pointHighlightFill": "#fff",
-                    "pointHighlightStroke": "rgba(220,220,220,1)",
-                    "data": [65, 59, 80, 81, 80]
-                },
-                {
-                    "label": "dataset 2",
-                    "fillColor": "rgba(151,187,205,0.2)",
-                    "strokeColor": "rgba(151,187,205,1)",
-                    "pointColor": "rgba(151,187,205,1)",
-                    "pointStrokeColor": "#fff",
-                    "pointHighlightFill": "#fff",
-                    "pointHighlightStroke": "rgba(151,187,205,1)",
-                    "data": [28, 48, 40, 19, 69]
-                }
-            ],
-        },
+        somaHorasUsuario = verificarHoras(self.request.user)
 
-    ]
-    """
-    # default icons data
-    list_counters = [
-        {"title": "ATIVOS", "value": users, "style": "primary", "icon": "fa-user-circle"},
-        {"title": "HORAS", "value": soma, "style": "warning", "icon": "fa-users"},
-    ]
+        for user in users:
+            horasUsuario = verificarHoras(user)
+            usuarios.append(user.username)
+            list_horasUsuario.append(horasUsuario)
 
+        list_charts = [
+
+            {
+                # Support Chart types: Bar, Line, Radar
+                "name": "vendas",
+                "title": "Banco de horas",
+                "chart_type": "Bar",
+                "labels": usuarios,
+                "datasets": [
+                    {
+                        "label": "dataset 2",
+                        "fillColor": "rgba(151,187,205,0.2)",
+                        "strokeColor": "rgba(151,187,205,1)",
+                        "pointColor": "rgba(151,187,205,1)",
+                        "pointStrokeColor": "#fff",
+                        "pointHighlightFill": "#fff",
+                        "pointHighlightStroke": "rgba(151,187,205,1)",
+                        "data": list_horasUsuario
+                    }
+                ],
+            },
+
+        ]
+
+        list_counters = [
+            # {"title": "ATIVOS", "value": users, "style": "primary", "icon": "fa-user-circle"},
+            {"title": "MINHAS HORAS", "value": somaHorasUsuario, "style": "warning", "icon": "fa-users"},
+        ]
+
+        context['minhas_Horas'] = somaHorasUsuario
+        context['counters'] = list_counters
+        context['charts'] = list_charts
+
+        return context
