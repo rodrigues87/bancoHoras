@@ -38,7 +38,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'core'
+    'banco'
 ]
 
 MIDDLEWARE = [
@@ -53,11 +53,12 @@ MIDDLEWARE = [
 
 ROOT_URLCONF = 'bancoHoras.urls'
 
+LOGIN_REDIRECT_URL = '/dashboard/'
+
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [os.path.join(BASE_DIR, 'templates')]
-        ,
+        'DIRS': [os.path.join(BASE_DIR, 'templates')],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -118,6 +119,7 @@ USE_TZ = True
 
 LOGOUT_REDIRECT_URL = '/'
 
+
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/2.2/howto/static-files/
 
@@ -125,7 +127,7 @@ STATIC_URL = '/static/'
 
 VALI_CONFIG = {
     # the vali-admin themes  default, blue, purple, green,brown
-    'theme': 'default',
+    'theme': 'red',
     'dashboard': {'name': 'Dashboard', 'url': '/dashboard/'},
     # the order for applist  default, registry
     # display applist by group: True

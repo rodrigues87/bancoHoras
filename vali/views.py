@@ -9,7 +9,7 @@ from django.contrib.auth.decorators import login_required
 from django.conf import settings
 from django.apps import apps
 
-from core.models import BancoHoras
+from banco.models import BancoHoras
 from .counters import CounterBase
 from .charts import ChartsBase
 
@@ -124,7 +124,7 @@ class ValiDashboardView(ValiDashboardBase):
 
         list_counters = [
             # {"title": "ATIVOS", "value": users, "style": "primary", "icon": "fa-user-circle"},
-            {"title": "MINHAS HORAS", "value": somaHorasUsuario, "style": "warning", "icon": "fa-users"},
+            {"title": "MINHAS HORAS", "value": somaHorasUsuario, "style": "danger", "icon": "fa-user-circle"},
         ]
 
         context['minhas_Horas'] = somaHorasUsuario

@@ -14,16 +14,17 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
-from django.urls import path
+from django.urls import path, include
 from django.views.generic import RedirectView
 from django.conf.urls import url
-from core.views import HomepageView
+from banco.views import HomepageView
 
 from vali.views import ValiDashboardView
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('dashboard/', ValiDashboardView.as_view(), name="dashboard"),
-    path('token/',  HomepageView.as_view(), name= "token"),
+    path('login',  HomepageView, name= "token"),
+    path('accounts/', include('django.contrib.auth.urls')), # new
     url(r'', RedirectView.as_view(url='/admin/')),
 ]
