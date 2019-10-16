@@ -17,11 +17,13 @@ from django.contrib import admin
 from django.urls import path
 from django.views.generic import RedirectView
 from django.conf.urls import url
+from core.views import HomepageView
 
 from vali.views import ValiDashboardView
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('dashboard/', ValiDashboardView.as_view(), name="dashboard"),
+    path('token/',  HomepageView.as_view(), name= "token"),
     url(r'', RedirectView.as_view(url='/admin/')),
 ]
