@@ -24,7 +24,7 @@ from vali.views import ValiDashboardView
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('dashboard/', ValiDashboardView.as_view(), name="dashboard"),
-    path('login',  HomepageView, name= "token"),
+    path('login/',  HomepageView, name= "token"),
     path('accounts/', include('django.contrib.auth.urls')), # new
     url(r'', RedirectView.as_view(url='/admin/')),
 ]

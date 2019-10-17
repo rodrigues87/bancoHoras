@@ -6,6 +6,9 @@ import json
 from collections import namedtuple
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.models import Group
+from django.core import serializers
+
+from cadastro.models import Cadastro
 
 
 def HomepageView(request):
@@ -15,7 +18,7 @@ def HomepageView(request):
 
     print(response)
 
-    if (str(response) == 'None'):
+    if str(response) == 'None':
         return HttpResponseRedirect("http://portal.cb.es.gov.br/portal-cbmes/")
 
     else:
@@ -24,6 +27,9 @@ def HomepageView(request):
         print(decodedPayload)
 
         jsonValue = json.dumps(decodedPayload)
+
+
+
 
         x = json.loads(jsonValue, object_hook=lambda d: namedtuple('X', d.keys())(*d.values()))
         print(x.sub, x.usuario.nome, x.usuario.postoGraduacao)
@@ -36,8 +42,9 @@ def HomepageView(request):
             user = User.objects.create_user(
                 username=x.sub,
                 password='Bombeiros2019',
-                email=x.usuario.email
+                email=x.usuario.email,
             )
+
             user.is_staff = True
 
             if x.usuario.oficial == 'S':
@@ -48,6 +55,51 @@ def HomepageView(request):
                 my_group.user_set.add(user)
 
             user.save()
+
+            if x.usuario.oficial == "S":
+                oficial = True
+            else:
+                oficial = False
+
+            localAdido = x.usuario.locais.localAdido
+
+            localQdi = Locais.objects.create(
+                idLocalQdi=1,
+                sigla="x.usuario.locais.localQdi.sigla",
+                nome="teste",
+            )
+            localQdi.save()
+
+            localQo = Locais.objects.create(
+                idLocalQo=2,
+                sigla="x.usuario.locais.localQo.sigla",
+                nome="teste",
+            )
+            localQo.save()
+
+            locais = Locais.objects.create(
+                localQo=localQo,
+                localQdi=localQdi,
+                localAdido=localAdido,
+            )
+
+            locais.save()
+
+            cadastro = Cadastro.objects.create(
+                user=user,
+                local=locais,
+                postoGraduacao=x.usuario.postoGraduacao,
+                oficial=oficial,
+                nomeGuerra=x.usuario.nomeGuerra,
+                numeroFuncional=x.usuario.numeroFuncional,
+                cpf=x.usuario.cpf
+
+
+            )
+            #cadastro.local.localQdi =x.usuario.locais.localQdi
+            #cadastro.local.localQo = x.usuario.locais.localQo
+
+            cadastro.save()
 
             login(request, user)
             return HttpResponseRedirect(redirect_to)
