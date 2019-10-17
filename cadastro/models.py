@@ -14,7 +14,10 @@ class Cadastro(models.Model):
     nomeGuerra = models.CharField(blank=True,null=True,max_length=30)
     numeroFuncional = models.CharField(blank=True,null=True,max_length=10)
     cpf = models.CharField(blank=True,null=True,max_length=15)
-    local = models.ForeignKey(Locais, blank=True,null=True,on_delete=models.CASCADE)
+    localQdi = models.CharField(max_length=150,blank=True,null=True)
+    localQo = models.CharField(max_length=150,blank=True,null=True)
+
+    #local = models.ForeignKey(Locais, blank=True,null=True,on_delete=models.CASCADE)
 
 
 @receiver(post_save, sender=User)

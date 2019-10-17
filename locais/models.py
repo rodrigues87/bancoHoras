@@ -2,7 +2,6 @@ from django.db import models
 
 
 class LocalQo(models.Model):
-    idLocalQo = models.IntegerField(blank=True,null=True)
     sigla = models.CharField(max_length=10,blank=True,null=True)
     nome = models.CharField(max_length=150,blank=True,null=True)
 
@@ -14,7 +13,6 @@ class LocalQo(models.Model):
 
 
 class LocalQdi(models.Model):
-    idLocalQdi = models.IntegerField(blank=True,null=True)
     sigla = models.CharField(max_length=10,blank=True,null=True)
     nome = models.CharField(max_length=150,blank=True,null=True)
 

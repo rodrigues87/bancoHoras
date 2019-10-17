@@ -29,26 +29,25 @@ def HomepageView(request):
 
         jsonValue = json.dumps(decodedPayload)
 
+        #serialized_obj = serializers.serialize('json', [obj, ])
 
+        jonObject = json.loads(jsonValue, object_hook=lambda d: namedtuple('X', d.keys())(*d.values()))
+        print(jonObject.sub, jonObject.usuario.nome, jonObject.usuario.postoGraduacao)
 
-
-        x = json.loads(jsonValue, object_hook=lambda d: namedtuple('X', d.keys())(*d.values()))
-        print(x.sub, x.usuario.nome, x.usuario.postoGraduacao)
-
-        user = authenticate(username=x.sub, password='Bombeiros2019')
+        user = authenticate(username=jonObject.sub, password='Bombeiros2019')
         if user is not None:
             login(request, user)
             return HttpResponseRedirect(redirect_to)
         else:
             user = User.objects.create_user(
-                username=x.sub,
+                username=jonObject.sub,
                 password='Bombeiros2019',
-                email=x.usuario.email,
+                email=jonObject.usuario.email,
             )
 
             user.is_staff = True
 
-            if x.usuario.oficial == 'S':
+            if jonObject.usuario.oficial == 'S':
                 my_group = Group.objects.get(name='supervisor')
                 my_group.user_set.add(user)
             else:
@@ -57,22 +56,20 @@ def HomepageView(request):
 
             user.save()
 
-            if x.usuario.oficial == "S":
+            if jonObject.usuario.oficial == "S":
                 oficial = True
             else:
                 oficial = False
-
-            localAdido = x.usuario.locais.localAdido
+            """
+            localAdido = jonObject.usuario.locais.localAdido
 
             localQdi = Locais.objects.create(
-                idLocalQdi=1,
                 sigla="x.usuario.locais.localQdi.sigla",
                 nome="teste",
             )
             localQdi.save()
 
             localQo = Locais.objects.create(
-                idLocalQo=2,
                 sigla="x.usuario.locais.localQo.sigla",
                 nome="teste",
             )
@@ -85,16 +82,16 @@ def HomepageView(request):
             )
 
             locais.save()
-
+"""
             cadastro = Cadastro.objects.create(
                 user=user,
-                local=locais,
-                postoGraduacao=x.usuario.postoGraduacao,
+                postoGraduacao=jonObject.usuario.postoGraduacao,
                 oficial=oficial,
-                nomeGuerra=x.usuario.nomeGuerra,
-                numeroFuncional=x.usuario.numeroFuncional,
-                cpf=x.usuario.cpf
-
+                nomeGuerra=jonObject.usuario.nomeGuerra,
+                numeroFuncional=jonObject.usuario.numeroFuncional,
+                cpf=jonObject.usuario.cpf,
+                localQo=jonObject.usuario.locais.localQo,
+                localQdi=jonObject.usuario.locais.localQdi
 
             )
             #cadastro.local.localQdi =x.usuario.locais.localQdi
