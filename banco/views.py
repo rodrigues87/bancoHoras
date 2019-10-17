@@ -9,6 +9,7 @@ from django.contrib.auth.models import Group
 from django.core import serializers
 
 from cadastro.models import Cadastro
+from locais.models import Locais
 
 
 def HomepageView(request):
