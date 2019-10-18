@@ -94,10 +94,10 @@ class ValiDashboardView(ValiDashboardBase):
 
         cadastros = Cadastro.objects.filter(user=self.request.user)
 
+        somaHorasUsuario = 0
+
         for cadastro in cadastros:
             somaHorasUsuario = verificarHoras(cadastro)
-
-
 
         for user in users:
             cadastros = Cadastro.objects.filter(user=user)
@@ -105,8 +105,6 @@ class ValiDashboardView(ValiDashboardBase):
                 horasUsuario = verificarHoras(cadastro)
                 usuarios.append(user.username)
                 list_horasUsuario.append(horasUsuario)
-
-
 
         list_charts = [
 

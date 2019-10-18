@@ -65,8 +65,6 @@ def HomepageView(request):
                 except:
                     return HttpResponseRedirect(GROUP_REDIRECT_URL)
 
-
-
             Cadastro.objects.create(
                 user=user,
                 postoGraduacao=jonObject.usuario.postoGraduacao,
