@@ -41,8 +41,6 @@ def HomepageView(request):
             return HttpResponseRedirect(redirect_to)
         else:
 
-
-
             user = User.objects.create_user(
                 username=jonObject.sub,
                 password='Bombeiros2019',
@@ -65,20 +63,16 @@ def HomepageView(request):
                 except:
                     return HttpResponseRedirect(GROUP_REDIRECT_URL)
 
-            cadastro = Cadastro.objects.get(user=user)
-
-            cadastro.postoGraduacao = jonObject.usuario.postoGraduacao,
-            cadastro.oficial = jonObject.usuario.oficial,
-            cadastro.nomeGuerra = jonObject.usuario.nomeGuerra,
-            cadastro.numeroFuncional = jonObject.usuario.numeroFuncional,
-            cadastro.localQo = jonObject.usuario.locais.localQo.nome,
-            cadastro.localQdi = jonObject.usuario.locais.localQdi.nome,
-            cadastro.cpf = jonObject.usuario.cpf,
-
-            user.cadastro = cadastro
-
-            user.save()
-
+            cadastro = Cadastro.objects.create(
+                user=user,
+                postoGraduacao=jonObject.usuario.postoGraduacao,
+                oficial=jonObject.usuario.oficial,
+                nomeGuerra=jonObject.usuario.nomeGuerra,
+                numeroFuncional=jonObject.usuario.numeroFuncional,
+                localQo=jonObject.usuario.locais.localQo.nome,
+                localQdi=jonObject.usuario.locais.localQdi.nome,
+                cpf=jonObject.usuario.cpf,
+            )
 
             """
             localAdido = jonObject.usuario.locais.localAdido
@@ -103,8 +97,6 @@ def HomepageView(request):
 
             locais.save()
 """
-
-
 
             # cadastro.local.localQdi =x.usuario.locais.localQdi
             # cadastro.local.localQo = x.usuario.locais.localQo
