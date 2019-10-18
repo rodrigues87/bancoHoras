@@ -1,5 +1,7 @@
 from django.contrib.auth.models import User
 from django.db import models
+from django.db.models.signals import post_save
+from django.dispatch import receiver
 
 from locais.models import Locais
 
@@ -21,4 +23,5 @@ class Cadastro(models.Model):
     class Meta:
         verbose_name_plural = "Cadastro"
 
-    # local = models.ForeignKey(Locais, blank=True,null=True,on_delete=models.CASCADE)
+
+

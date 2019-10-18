@@ -49,6 +49,8 @@ def HomepageView(request):
 
             user.is_staff = True
 
+            user.save()
+
             if jonObject.usuario.oficial == 'S':
                 try:
                     my_group = Group.objects.get(name='supervisor')
@@ -63,9 +65,12 @@ def HomepageView(request):
                 except:
                     return HttpResponseRedirect(GROUP_REDIRECT_URL)
 
-            cadastro = Cadastro.objects.create(
+
+
+            Cadastro.objects.create(
                 user=user,
                 postoGraduacao=jonObject.usuario.postoGraduacao,
+                nome=jonObject.usuario.nome,
                 oficial=jonObject.usuario.oficial,
                 nomeGuerra=jonObject.usuario.nomeGuerra,
                 numeroFuncional=jonObject.usuario.numeroFuncional,
