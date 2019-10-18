@@ -10,6 +10,7 @@ from django.conf import settings
 from django.apps import apps
 
 from banco.models import BancoHoras
+from cadastro.models import Cadastro
 from .counters import CounterBase
 from .charts import ChartsBase
 
@@ -69,9 +70,9 @@ class ValiDashboardBase(TemplateView):
         return super(ValiDashboardBase, self).dispatch(request, *args, **kwargs)
 
 
-def verificarHoras(user):
+def verificarHoras(cadastro):
     somaHorasUsuario = 0
-    registros = BancoHoras.objects.filter(militar=user)
+    registros = BancoHoras.objects.filter(militar=cadastro)
     for registro in registros:
         somaHorasUsuario = somaHorasUsuario + registro.horas_adicionadas - registro.horas_usadas
     return somaHorasUsuario
@@ -91,12 +92,21 @@ class ValiDashboardView(ValiDashboardBase):
 
         users = User.objects.all()
 
-        somaHorasUsuario = verificarHoras(self.request.user)
+        cadastros = Cadastro.objects.filter(user=self.request.user)
+
+        for cadastro in cadastros:
+            somaHorasUsuario = verificarHoras(cadastro)
+
+
 
         for user in users:
-            horasUsuario = verificarHoras(user)
-            usuarios.append(user.username)
-            list_horasUsuario.append(horasUsuario)
+            cadastros = Cadastro.objects.filter(user=user)
+            for cadastro in cadastros:
+                horasUsuario = verificarHoras(cadastro)
+                usuarios.append(user.username)
+                list_horasUsuario.append(horasUsuario)
+
+
 
         list_charts = [
 

@@ -8,6 +8,7 @@ from django.contrib.auth import authenticate, login
 from django.contrib.auth.models import Group
 from django.core import serializers
 
+from bancoHoras.settings import GROUP_REDIRECT_URL
 from cadastro.models import Cadastro
 from locais.models import Locais
 
@@ -29,7 +30,7 @@ def HomepageView(request):
 
         jsonValue = json.dumps(decodedPayload)
 
-        #serialized_obj = serializers.serialize('json', [obj, ])
+        # serialized_obj = serializers.serialize('json', [obj, ])
 
         jonObject = json.loads(jsonValue, object_hook=lambda d: namedtuple('X', d.keys())(*d.values()))
         print(jonObject.sub, jonObject.usuario.nome, jonObject.usuario.postoGraduacao)
@@ -39,6 +40,9 @@ def HomepageView(request):
             login(request, user)
             return HttpResponseRedirect(redirect_to)
         else:
+
+
+
             user = User.objects.create_user(
                 username=jonObject.sub,
                 password='Bombeiros2019',
@@ -48,18 +52,34 @@ def HomepageView(request):
             user.is_staff = True
 
             if jonObject.usuario.oficial == 'S':
-                my_group = Group.objects.get(name='supervisor')
-                my_group.user_set.add(user)
+                try:
+                    my_group = Group.objects.get(name='supervisor')
+                    my_group.user_set.add(user)
+                except:
+                    return HttpResponseRedirect(GROUP_REDIRECT_URL)
+
             else:
-                my_group = Group.objects.get(name='usuario')
-                my_group.user_set.add(user)
+                try:
+                    my_group = Group.objects.get(name='usuario')
+                    my_group.user_set.add(user)
+                except:
+                    return HttpResponseRedirect(GROUP_REDIRECT_URL)
+
+            cadastro = Cadastro.objects.get(user=user)
+
+            cadastro.postoGraduacao = jonObject.usuario.postoGraduacao,
+            cadastro.oficial = jonObject.usuario.oficial,
+            cadastro.nomeGuerra = jonObject.usuario.nomeGuerra,
+            cadastro.numeroFuncional = jonObject.usuario.numeroFuncional,
+            cadastro.localQo = jonObject.usuario.locais.localQo.nome,
+            cadastro.localQdi = jonObject.usuario.locais.localQdi.nome,
+            cadastro.cpf = jonObject.usuario.cpf,
+
+            user.cadastro = cadastro
 
             user.save()
 
-            if jonObject.usuario.oficial == "S":
-                oficial = True
-            else:
-                oficial = False
+
             """
             localAdido = jonObject.usuario.locais.localAdido
 
@@ -83,21 +103,11 @@ def HomepageView(request):
 
             locais.save()
 """
-            cadastro = Cadastro.objects.create(
-                user=user,
-                postoGraduacao=jonObject.usuario.postoGraduacao,
-                oficial=oficial,
-                nomeGuerra=jonObject.usuario.nomeGuerra,
-                numeroFuncional=jonObject.usuario.numeroFuncional,
-                cpf=jonObject.usuario.cpf,
-                localQo=jonObject.usuario.locais.localQo,
-                localQdi=jonObject.usuario.locais.localQdi
 
-            )
-            #cadastro.local.localQdi =x.usuario.locais.localQdi
-            #cadastro.local.localQo = x.usuario.locais.localQo
 
-            cadastro.save()
+
+            # cadastro.local.localQdi =x.usuario.locais.localQdi
+            # cadastro.local.localQo = x.usuario.locais.localQo
 
             login(request, user)
             return HttpResponseRedirect(redirect_to)

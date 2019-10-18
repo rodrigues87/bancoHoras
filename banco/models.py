@@ -1,16 +1,17 @@
-from django.contrib.auth.models import User
 from django.db import models
+
+from cadastro.models import Cadastro
 
 
 class BancoHoras(models.Model):
-    militar = models.ForeignKey(User, on_delete=models.CASCADE, related_name="usuario_cadastro")
+    militar = models.OneToOneField(Cadastro, on_delete=models.CASCADE, related_name="usuario_cadastro")
     horas_adicionadas = models.IntegerField(default=0)
     horas_usadas = models.IntegerField(default=0)
     descricao = models.CharField(max_length=150, default="Nao informado")
     aprovado = models.BooleanField(default=False)
 
     def __str__(self):
-        return self.militar.username
+        return self.militar.nome
 
     class Meta:
         verbose_name_plural = "Banco De Horas"

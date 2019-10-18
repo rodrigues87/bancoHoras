@@ -8,20 +8,30 @@ from locais.models import Locais
 
 class Cadastro(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
-    postoGraduacao = models.CharField(blank=True,null=True,max_length=12)
-    nome = models.CharField(blank=True,null=True,max_length=90)
-    oficial = models.BooleanField(blank=True,null=True)
-    nomeGuerra = models.CharField(blank=True,null=True,max_length=30)
-    numeroFuncional = models.CharField(blank=True,null=True,max_length=10)
-    cpf = models.CharField(blank=True,null=True,max_length=15)
-    localQdi = models.CharField(max_length=150,blank=True,null=True)
-    localQo = models.CharField(max_length=150,blank=True,null=True)
+    postoGraduacao = models.CharField(blank=True, null=True, max_length=12, default="nao encontrado")
+    nome = models.CharField(blank=True, null=True, max_length=90, default="nao encontrado")
+    oficial = models.CharField(max_length=1, blank=True, null=True, default="E")
+    nomeGuerra = models.CharField(blank=True, null=True, max_length=30, default="nao encontrado")
+    numeroFuncional = models.CharField(blank=True, null=True, max_length=10, default="nao encontrado")
+    cpf = models.CharField(blank=True, null=True, max_length=15, default="nao encontrado")
+    localQdi = models.CharField(max_length=150, blank=True, null=True, default="nao encontrado")
+    localQo = models.CharField(max_length=150, blank=True, null=True, default="nao encontrado")
 
-    #local = models.ForeignKey(Locais, blank=True,null=True,on_delete=models.CASCADE)
+    def __str__(self):  # __unicode__ for Python 2
+        return self.user.username
+
+    class Meta:
+        verbose_name_plural = "Cadastro"
+
+    # local = models.ForeignKey(Locais, blank=True,null=True,on_delete=models.CASCADE)
 
 
 @receiver(post_save, sender=User)
 def create_or_update_user_cadastro(sender, instance, created, **kwargs):
     if created:
-        Cadastro.objects.create(user=instance)
+        cadastro = Cadastro.objects.create(
+            user=instance,
+        )
+        instance.cadastro = cadastro
+
     instance.cadastro.save()

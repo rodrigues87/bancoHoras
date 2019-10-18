@@ -56,6 +56,7 @@ MIDDLEWARE = [
 ROOT_URLCONF = 'bancoHoras.urls'
 
 LOGIN_REDIRECT_URL = '/dashboard/'
+GROUP_REDIRECT_URL = '/auth/group/'
 
 TEMPLATES = [
     {
