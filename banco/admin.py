@@ -63,8 +63,6 @@ class FilterUserAdmin(admin.ModelAdmin):
         if request.user.groups.filter(name="usuario").exists():
             return qs.filter(militar_id=cadastro)
 
-
-
     def has_change_permission(self, request, obj=None):
         if not obj:
             # the changelist itself
@@ -82,6 +80,12 @@ class FilterUserAdmin(admin.ModelAdmin):
         else:
             return ['aprovado']
             # f.name for f in self.model._meta.fields
+
+    def has_add_permission(self, request):
+        return True
+
+    def has_delete_permission(self, request, obj=None):
+        return True
 
 
 class MyModelAdmin(FilterUserAdmin):
