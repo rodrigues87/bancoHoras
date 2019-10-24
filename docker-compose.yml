@@ -1,12 +1,8 @@
-version: '3.7'
+version: '3'
 
 services:
   web:
-    build: ./app
-    command: python manage.py runserver 0.0.0.0:8000
-    volumes:
-      - ./app/:/usr/src/app/
+    build: .
+    command: python bancoHoras/manage.py runserver 8001
     ports:
-      - 8000:8000
-    env_file:
-      - ./.env.dev
+      - "8001:8001"
