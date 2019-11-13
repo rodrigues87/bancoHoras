@@ -69,11 +69,13 @@ class FilterUserAdmin(admin.ModelAdmin):
             return True
         return obj
 
+    """
     def changelist_view(self, request, extra_context=None):
+       
         if not request.user.is_superuser or request.user.groups.filter(name="supervisor").exists():
             self.list_display = ('horas_adicionadas', 'horas_usadas', 'descricao', 'aprovado',)
         return super(FilterUserAdmin, self).changelist_view(request, extra_context)
-
+    """
     def get_readonly_fields(self, request, obj=None):
         if request.user.is_superuser or request.user.groups.filter(name="supervisor").exists():
             return []
