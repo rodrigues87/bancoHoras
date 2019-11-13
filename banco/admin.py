@@ -53,7 +53,7 @@ class FilterUserAdmin(admin.ModelAdmin):
 
     def get_queryset(self, request):
         # For Django < 1.6, override queryset instead of get_queryset
-        cadastro = Cadastro.objects.filter(user_id=request.user)
+        cadastro = Cadastro.objects.get(user_id=request.user)
 
         qs = super(FilterUserAdmin, self).get_queryset(request)
         if request.user.is_superuser:
